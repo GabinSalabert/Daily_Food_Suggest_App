@@ -73,7 +73,7 @@ function AppInner() {
         onClearCache={handleClear}
       />
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 py-6">
+      <main className="flex-1 w-full px-4 sm:px-8 xl:px-16 py-6">
 
         {loading && !data && (
           <div className="flex flex-col items-center justify-center py-24 gap-3 text-ink-400">
@@ -101,7 +101,7 @@ function AppInner() {
                 <TrendingDown className="w-4 h-4 text-deal-badge" />
                 <h2 className="font-display font-semibold text-ink-900">{t.pricesDown}</h2>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {translatedData.markets.map((market, i) => (
                   <MarketPanel key={market.id + '-down'} market={market} direction="down" index={i} />
                 ))}
@@ -113,7 +113,7 @@ function AppInner() {
                 <TrendingUp className="w-4 h-4 text-rise-badge" />
                 <h2 className="font-display font-semibold text-ink-900">{t.pricesUp}</h2>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {translatedData.markets.map((market, i) => (
                   <MarketPanel key={market.id + '-up'} market={market} direction="up" index={i} />
                 ))}

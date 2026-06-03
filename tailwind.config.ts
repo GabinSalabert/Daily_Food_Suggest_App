@@ -14,6 +14,9 @@ export default {
         deal: { bg: '#ecfdf5', border: '#a7f3d0', text: '#065f46', badge: '#059669' },
         rise: { bg: '#fff1f2', border: '#fecdd3', text: '#9f1239', badge: '#e11d48' },
       },
+      maxWidth: {
+        '8xl': '84rem',
+      },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['"Playfair Display"', 'Georgia', 'serif'],

@@ -18,16 +18,22 @@ function ProductRow({ p, i }: { p: Product; i: number }) {
       initial={{ opacity: 0, x: -6 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: i * 0.02, duration: 0.2 }}
-      className="flex items-center gap-3 px-4 py-2.5 border-b border-ink-50 last:border-0 hover:bg-ink-50/50 transition-colors"
+      className="flex flex-col px-4 py-2.5 border-b border-ink-50 last:border-0 hover:bg-ink-50/50 transition-colors gap-0.5"
     >
-      <span className="flex-1 text-sm text-ink-800 truncate">{p.name}</span>
-      <span className={`flex-shrink-0 text-xs font-medium tabular-nums ${isDown ? 'text-deal-text' : 'text-rise-text'}`}>
-        {isDown ? '↓' : '↑'} {varAbs.toFixed(2)} €
-      </span>
-      <span className="flex-shrink-0 text-sm font-semibold text-ink-900 tabular-nums w-20 text-right">
-        {p.price.toFixed(2)} €
-        <span className="text-xs font-normal text-ink-400">/{p.unit}</span>
-      </span>
+      {/* Product name — always full width, never truncated */}
+      <span className="text-sm text-ink-800 leading-snug">{p.name}</span>
+
+      {/* Price & variation on a smaller second line */}
+      <div className="flex items-center gap-2">
+        <span className={`text-xs font-medium tabular-nums ${isDown ? 'text-deal-text' : 'text-rise-text'}`}>
+          {isDown ? '↓' : '↑'} {varAbs.toFixed(2)} €
+        </span>
+        <span className="text-xs text-ink-400">·</span>
+        <span className="text-xs font-semibold text-ink-700 tabular-nums">
+          {p.price.toFixed(2)} €
+          <span className="font-normal text-ink-400">/{p.unit}</span>
+        </span>
+      </div>
     </motion.div>
   );
 }
