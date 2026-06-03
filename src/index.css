@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+  body { @apply bg-ink-50 text-ink-900 font-sans; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-ink-200 rounded-full; }
+}
+
+@layer components {
+  .card { @apply bg-white rounded-2xl border border-ink-100 shadow-sm; }
+  .badge-deal { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-deal-bg text-deal-text border border-deal-border; }
+  .badge-rise { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-rise-bg text-rise-text border border-rise-border; }
+  .badge-flat { @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-ink-100 text-ink-500; }
+  .btn { @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 disabled:opacity-40; }
+  .btn-dark { @apply btn bg-ink-900 text-white hover:bg-ink-800; }
+  .btn-light { @apply btn bg-white text-ink-700 border border-ink-200 hover:bg-ink-50; }
+}
+
+@layer utilities {
+  .font-display { font-family: 'Playfair Display', Georgia, serif; }
+}

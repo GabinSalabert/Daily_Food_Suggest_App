@@ -1,0 +1,11 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/rnm/:path*",
+      "destination": "https://rnm.franceagrimer.fr/:path*"
+    }
+  ]
+}
