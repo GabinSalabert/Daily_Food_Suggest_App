@@ -32,32 +32,40 @@ function scoreRecipe(recipe: Recipe, dealProducts: Product[]): ScoredRecipe {
   return { ...recipe, matchedDeals, score: matchedDeals.length };
 }
 
-function pickBest(recipes: ScoredRecipe[], course: Course, count: number): ScoredRecipe[] {
+function pickBest(
+  recipes: ScoredRecipe[],
+  course: Course,
+  count: number,
+  excludeIds: Set<string>,
+): ScoredRecipe[] {
   const byCourse = recipes.filter(r => r.course === course);
-  // Prioritise recipes with deal matches, then vary by difficulty
   const withMatch = byCourse.filter(r => r.score > 0).sort((a, b) => b.score - a.score);
   const fallback = byCourse.filter(r => r.score === 0);
 
   const pool = [...withMatch, ...fallback];
-  // Deduplicate by id and pick top `count`
+  // Fresh recipes (not shown last market) come first; repeats are last resort
+  const fresh = pool.filter(r => !excludeIds.has(r.id));
+  const repeats = pool.filter(r => excludeIds.has(r.id));
+  const ordered = [...fresh, ...repeats];
+
   const seen = new Set<string>();
   const result: ScoredRecipe[] = [];
-  for (const r of pool) {
+  for (const r of ordered) {
     if (!seen.has(r.id)) { seen.add(r.id); result.push(r); }
     if (result.length >= count) break;
   }
   return result;
 }
 
-export function buildDailyMenu(allProducts: Product[]): DailyMenu {
+export function buildDailyMenu(allProducts: Product[], excludeIds: Set<string> = new Set()): DailyMenu {
   const deals = allProducts.filter(p => p.variation < 0);
   const scored = RECIPES.map(r => scoreRecipe(r, deals));
   const hasAnyMatch = scored.some(r => r.score > 0);
 
   return {
-    starters: pickBest(scored, 'starter', 2),
-    mains: pickBest(scored, 'main', 3),
-    desserts: pickBest(scored, 'dessert', 2),
+    starters: pickBest(scored, 'starter', 2, excludeIds),
+    mains: pickBest(scored, 'main', 3, excludeIds),
+    desserts: pickBest(scored, 'dessert', 2, excludeIds),
     hasAnyMatch,
   };
 }

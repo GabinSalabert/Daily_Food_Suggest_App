@@ -1,6 +1,7 @@
 import type { MarketData } from './types';
 
 const KEY = 'marche_du_jour_v1';
+const SUGGESTION_KEY = 'marche_suggestions_v1';
 // Cache lasts until end of day — prices are daily
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -43,4 +44,25 @@ export function cacheAgeMinutes(): number | null {
   } catch {
     return null;
   }
+}
+
+// ── Suggestion history ──────────────────────────────────────────────────────
+
+export interface SuggestionEntry {
+  marketDate: string;
+  suggestedIds: string[];
+}
+
+export function loadSuggestionHistory(): SuggestionEntry | null {
+  try {
+    const raw = localStorage.getItem(SUGGESTION_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as SuggestionEntry;
+  } catch {
+    return null;
+  }
+}
+
+export function saveSuggestionHistory(entry: SuggestionEntry): void {
+  localStorage.setItem(SUGGESTION_KEY, JSON.stringify(entry));
 }

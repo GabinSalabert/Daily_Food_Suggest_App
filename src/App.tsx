@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
 import { Header } from './components/Header';
 import { DealsSummary } from './components/DealsSummary';
 import { MarketPanel } from './components/MarketPanel';
 import { fetchAllMarkets } from './scraper';
-import { loadCache, saveCache, clearCache, cacheAgeMinutes } from './cache';
+import { loadCache, saveCache, clearCache, cacheAgeMinutes, loadSuggestionHistory, saveSuggestionHistory } from './cache';
 import { LangProvider, useLang, formatAge } from './i18n';
 import { buildDailyMenu } from './menuBuilder';
 import { MenuSuggestions } from './components/MenuSuggestions';
@@ -61,6 +61,29 @@ function AppInner() {
         })),
       }
     : null;
+
+  // Build daily menu, excluding recipes shown on the previous market date
+  const menu = useMemo(() => {
+    if (!translatedData) return null;
+    const currentMarketDate = translatedData.marketDate ?? translatedData.date;
+    const history = loadSuggestionHistory();
+    const isNewDate = !history || history.marketDate !== currentMarketDate;
+
+    const excludeIds = isNewDate && history
+      ? new Set(history.suggestedIds)
+      : new Set<string>();
+
+    const built = buildDailyMenu(translatedData.markets.flatMap(m => m.products), excludeIds);
+
+    if (isNewDate) {
+      saveSuggestionHistory({
+        marketDate: currentMarketDate,
+        suggestedIds: [...built.starters, ...built.mains, ...built.desserts].map(r => r.id),
+      });
+    }
+
+    return built;
+  }, [translatedData]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -121,7 +144,7 @@ function AppInner() {
             </div>
 
             {/* Daily menu suggestions */}
-            <MenuSuggestions menu={buildDailyMenu(translatedData.markets.flatMap(m => m.products))} />
+            {menu && <MenuSuggestions menu={menu} />}
           </div>
         )}
       </main>
